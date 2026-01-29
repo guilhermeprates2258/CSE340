@@ -1,0 +1,25 @@
+<%- include("../partials/head") %>
+<%- include("../partials/navigation") %>
+
+<main class="error-page">
+  <h1><%= title %></h1>
+
+  <section class="error-message">
+    <p><strong>Oops! Algo deu errado 😬</strong></p>
+
+    <p>
+      <%- message %>
+    </p>
+
+    <p style="margin-top: 1rem;">
+      💡 Dica: talvez o servidor precise de um café ☕ ou você digitou um caminho que não existe.
+    </p>
+
+    <p>
+      🚗 Enquanto isso, que tal voltar para a 
+      <a href="/">página inicial</a>?
+    </p>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>
