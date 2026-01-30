@@ -25,45 +25,108 @@ Util.getNav = async function (req, res, next) {
 }
 
 /* **************************************
-* Build the classification view HTML
-* ************************************ */
-Util.buildClassificationGrid = async function(data){
-  let grid
-  if(data.length > 0){
+ * Build the classification view HTML
+ * ************************************ */
+Util.buildClassificationGrid = async function (data) {
+  let grid = "" // <- garante inicialização
+
+  if (data.length > 0) {
     grid = '<ul id="inv-display">'
-    data.forEach(vehicle => { 
-      grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
+    data.forEach((vehicle) => {
+      grid += "<li>"
+      grid +=
+        '<a href="../../inv/detail/' +
+        vehicle.inv_id +
+        '" title="View ' +
+        vehicle.inv_make +
+        " " +
+        vehicle.inv_model +
+        ' details"><img src="' +
+        vehicle.inv_thumbnail +
+        '" alt="Image of ' +
+        vehicle.inv_make +
+        " " +
+        vehicle.inv_model +
+        ' on CSE Motors" /></a>'
+
       grid += '<div class="namePrice">'
-      grid += '<hr />'
-      grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
-      grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
-      grid += '</div>'
-      grid += '</li>'
+      grid += "<hr />"
+      grid += "<h2>"
+      grid +=
+        '<a href="../../inv/detail/' +
+        vehicle.inv_id +
+        '" title="View ' +
+        vehicle.inv_make +
+        " " +
+        vehicle.inv_model +
+        ' details">' +
+        vehicle.inv_make +
+        " " +
+        vehicle.inv_model +
+        "</a>"
+      grid += "</h2>"
+      grid +=
+        "<span>$" +
+        new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
+        "</span>"
+      grid += "</div>"
+      grid += "</li>"
     })
-    grid += '</ul>'
-  } else { 
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid += "</ul>"
+  } else {
+    grid +=
+      '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
 
+/* **************************************
+ * Build inventory detail HTML
+ * ************************************ */
+Util.buildInventoryDetailHTML = async function (vehicle) {
+  const priceUSD = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(vehicle.inv_price)
+
+  const mileage = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
+
+  let html = `
+  <section class="vehicle-detail">
+    <div class="vehicle-detail__image">
+      <img 
+        src="${vehicle.inv_image}" 
+        alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors"
+      />
+    </div>
+
+    <div class="vehicle-detail__content">
+      <h1 class="vehicle-detail__title">${vehicle.inv_make} ${vehicle.inv_model}</h1>
+
+      <div class="vehicle-detail__highlights">
+        <p><strong>Make:</strong> ${vehicle.inv_make}</p>
+        <p><strong>Model:</strong> ${vehicle.inv_model}</p>
+        <p><strong>Year:</strong> ${vehicle.inv_year}</p>
+        <p><strong>Price:</strong> ${priceUSD}</p>
+      </div>
+
+      <div class="vehicle-detail__specs">
+        <p><strong>Mileage:</strong> ${mileage} miles</p>
+        <p><strong>Color:</strong> ${vehicle.inv_color}</p>
+        <p><strong>Description:</strong> ${vehicle.inv_description}</p>
+      </div>
+    </div>
+  </section>
+  `
+  return html
+}
+
 /* ****************************************
  * Middleware For Handling Errors
- * Wrap other function in this for 
- * General Error Handling
  **************************************** */
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
-
-
+Util.handleErrors =
+  (fn) =>
+  (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch(next)
 
 module.exports = Util
