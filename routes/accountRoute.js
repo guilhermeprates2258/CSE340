@@ -3,6 +3,8 @@ const express = require("express");
 const router = new express.Router();
 const regValidate = require("../utilities/account-validation")
 
+
+
 const utilities = require("../utilities/");
 const accountController = require("../controllers/accountController");
 
@@ -27,6 +29,17 @@ router.post(
   regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 )
+
+// Process the login attempt (temporary - for validation testing)
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  (req, res) => {
+    res.status(200).send("login process")
+  }
+)
+
 
 
 
