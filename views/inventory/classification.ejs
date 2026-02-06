@@ -5,6 +5,9 @@
 } %>
 
 
-<%# messages() %>
+<% if (messages) { %>
+  <%- messages() %>
+<% } %>
+
 
 <%- grid %>
